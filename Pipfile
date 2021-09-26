@@ -8,6 +8,7 @@ selenium = "*"
 django = "*"
 webdriver-manager = "*"
 gunicorn = "*"
+django-environ = "*"
 
 [dev-packages]
 flake8 = "*"
