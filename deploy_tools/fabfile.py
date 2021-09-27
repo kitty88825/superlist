@@ -26,3 +26,11 @@ def _get_latest_source():
 
     current_commit = local("git log -n 1 --format=%H", capture=True)
     run(f'git reset --hard {current_commit}')
+
+
+def _update_virtualenv():
+    if not exists('.venv/bin/pip'):
+        run(f'pip install pipenv')
+        run(f'pipenv install --python 3.9.7')
+
+    run('pipenv install --dev')
