@@ -10,6 +10,7 @@ REPO_URL = 'https://github.com/kitty88825/superlist.git'
 
 
 def deploy():
+    env.use_ssh_config = True
     site_folder = f'/home/{env.user}/site/{env.host}'
     run(f'mkdir -p {site_folder}')
     with cd(site_folder):
