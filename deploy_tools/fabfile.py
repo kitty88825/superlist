@@ -36,7 +36,7 @@ def _update_virtualenv():
         run(f'pip install pipenv')
         run(f'pipenv install --python 3.9.7')
 
-    run('pipenv install')
+    run('python3 -m pipenv install')
 
 
 def _create_or_update_dotenv():
