@@ -49,3 +49,7 @@ def _create_or_update_dotenv():
         extension = f'{secret_text}; {allowed_hosts_text}'
 
     run(f"sed -i '{extension}' superlists/.env")
+
+
+def _update_static_files():
+    run('.venv/bin/python manage.py collectstatic --noinput')
