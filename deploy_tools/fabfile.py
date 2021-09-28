@@ -1,4 +1,6 @@
-import random
+from random import SystemRandom
+
+from string import ascii_letters, digits
 
 from fabric.contrib.files import append, exists
 from fabric.api import cd, env, local, run
@@ -29,8 +31,21 @@ def _get_latest_source():
 
 
 def _update_virtualenv():
-    if not exists('.venv/bin/pip'):
+    if not exists('.venv'):
         run(f'pip install pipenv')
         run(f'pipenv install --python 3.9.7')
 
-    run('pipenv install --dev')
+    run('pipenv install')
+
+
+def _create_or_update_dotenv():
+    allowed_hosts_text = f's/ALLOWED_HOSTS=.*/ALLOWED_HOSTS={env.host}/'
+    extension = allowed_hosts_text
+
+    if not exists('superlists/.env'):
+        run(f'cp superlists/example.env superlists/.env')
+        new_secret_key = ''.join(SystemRandom().choices(f'{ascii_letters}{digits}', k=50))
+        secret_text = f's/SECRET_KEY=/SECRET_KEY={new_secret_key}/'
+        extension = f'{secret_text}; {allowed_hosts_text}'
+
+    run(f"sed -i '{extension}' superlists/.env")
