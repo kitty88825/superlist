@@ -11,6 +11,7 @@ REPO_URL = 'https://github.com/kitty88825/superlist.git'
 
 def deploy():
     env.use_ssh_config = True
+    env.path = f'{env.path}:/home/{env.user}/.pyenv/shims'
     site_folder = f'/home/{env.user}/site/{env.host}'
     run(f'mkdir -p {site_folder}')
     with cd(site_folder):
@@ -34,9 +35,9 @@ def _get_latest_source():
 def _update_virtualenv():
     if not exists('.venv'):
         run(f'pip install pipenv')
-        run(f'pipenv install --python 3.9.7')
+        run(f'pipenv install --python 3.7.5')
 
-    run('python3 -m pipenv install')
+    run('pipenv install')
 
 
 def _create_or_update_dotenv():
