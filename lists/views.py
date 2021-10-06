@@ -20,6 +20,7 @@ def new_list(request):
 
 
 def view_list(request, list_id):
+    form = ItemForm()
     list_ = List.objects.get(id=list_id)
     error = None
     if request.method == 'POST':
@@ -35,4 +36,8 @@ def view_list(request, list_id):
             item.delete()
             error = "You can't have an empty list item."
 
-    return render(request, 'list.html', {'list': list_, 'error': error})
+    return render(request, 'list.html', {
+        'list': list_,
+        'form': form,
+        'error': error,
+    })
