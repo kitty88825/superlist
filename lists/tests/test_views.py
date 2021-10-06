@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.utils.html import escape
 
 from ..models import Item, List
-from ..forms import ItemForm
+from ..forms import ItemForm, EMPTY_ITEM_ERROR
 
 
 class HomePageTest(TestCase):
@@ -94,14 +94,25 @@ class NewListTest(TestCase):
         new_list = List.objects.first()
         self.assertRedirects(response, f'/lists/{new_list.id}/')
 
-    def test_validation_errors_are_sent_back_to_home_page_template(self):
-        response = self.client.post('/lists/new/', data={'text': ''})
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'home.html')
-        expected_error = escape("You can't have an empty list item.")
-        self.assertContains(response, expected_error)
-
     def test_invalid_list_items_arent_saved(self):
+        '''如果驗證失敗，不新增進 Item 或 List'''
         self.client.post('/lists/new/', data={'text': ''})
         self.assertEqual(List.objects.count(), 0)
         self.assertEqual(Item.objects.count(), 0)
+
+    def test_for_invalid_input_renders_home_template(self):
+        '''如果驗證失敗，轉譯首頁範本，使用 200'''
+        response = self.client.post('/lists/new/', data={'text': ''})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'home.html')
+
+    def test_validation_errors_are_shown_on_home_page(self):
+        '''如果驗證失敗，回應錯誤訊息'''
+        response = self.client.post('/lists/new/', data={'text': ''})
+        self.assertContains(response, escape(EMPTY_ITEM_ERROR))
+
+    def test_for_invalid_input_passes_form_to_template(self):
+        '''如果驗證失敗，將表單物件傳給範本'''
+        response = self.client.post('/lists/new/', data={'text': ''})
+        print()
+        self.assertIsInstance(response.context['form'], ItemForm)
