@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ..forms import EMPTY_ITEM_ERROR, ItemForm
+from ..forms import DUPLICATE_ITEM_ERROR, EMPTY_ITEM_ERROR, ItemForm, ExistingListItemForm
 from ..models import Item, List
 
 
@@ -24,3 +24,27 @@ class ItemFormTest(TestCase):
         self.assertEqual(new_item, Item.objects.first())
         self.assertEqual(new_item.text, 'do me')
         self.assertEqual(new_item.list, list_)
+
+
+class ExistingListItemFormTest(TestCase):
+
+    def test_form_renders_item_text_input(self):
+        '''輸入框內是否有提示文字'''
+        list_ = List.objects.create()
+        form = ExistingListItemForm(for_list=list_)
+        self.assertIn('placeholder="Enter a to-do item"', form.as_p())
+
+    def test_form_validation_for_blank_items(self):
+        '''未輸入資料是否出現錯誤訊息和錯誤視窗'''
+        list_ = List.objects.create()
+        form = ExistingListItemForm(for_list=list_, data={'text': ''})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['text'], [EMPTY_ITEM_ERROR])
+
+    def test_form_validation_for_duplicate_items(self):
+        '''輸入重複 item 是否出現錯誤訊息和錯誤視窗'''
+        list_ = List.objects.create()
+        Item.objects.create(list=list_, text='no twins!')
+        form = ExistingListItemForm(for_list=list_, data={'text': 'no twins!'})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors['text'], [DUPLICATE_ITEM_ERROR])
