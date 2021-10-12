@@ -1,10 +1,9 @@
-from unittest import skip
-
 from django.test import TestCase
 from django.utils.html import escape
 
 from ..models import Item, List
 from ..forms import ItemForm, EMPTY_ITEM_ERROR, ExistingListItemForm
+from ..views import ViewAndAddToList
 
 
 class HomePageTest(TestCase):
@@ -116,6 +115,12 @@ class ListViewTest(TestCase):
         self.assertContains(response, expected_error)
         self.assertTemplateUsed(response, 'list.html')
         self.assertEqual(Item.objects.all().count(), 1)
+
+    def test_cbv_gets_correct_object(self):
+        list_ = List.objects.create()
+        view = ViewAndAddToList()
+        view.kwargs = dict(pk=list_.id)
+        self.assertEqual(view.get_object(), list_)
 
 
 class NewListTest(TestCase):
