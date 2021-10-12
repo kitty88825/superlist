@@ -1,3 +1,4 @@
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView
 from django.shortcuts import redirect, render
 
@@ -16,6 +17,11 @@ class NewListView(CreateView, HomePageView):
         list_ = List.objects.create()
         form.save(for_list=list_)
         return redirect(list_)
+
+
+class ViewAndAddToList(DetailView):
+    model = List
+    template_name = 'list.html'
 
 
 def view_list(request, list_id):
