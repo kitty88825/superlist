@@ -10,3 +10,7 @@ class UserModelTest(TestCase):
     def test_user_is_valid_with_email_only(self):
         user = User(email='a@b.com')
         user.full_clean()
+
+    def test_email_id_primary_key(self):
+        user = User(email='a@b.com')
+        self.assertEqual(user.pk, 'a@b.com')
