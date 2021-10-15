@@ -13,7 +13,7 @@
 <body>
   <div class="container">
 
-    <div class="navbar navbar-default" role="navigation">
+    <nav class="navbar navbar-default" role="navigation">
       <div class="container-fluid">
         <a href="/" class="navbar-brand">Superlists</a>
         <form action="{% url 'send_login_email' %}" method="post" class="navbar-form navbar-right">
@@ -22,7 +22,7 @@
           {% csrf_token %}
         </form>
       </div>
-    </div>
+    </nav>
 
     <div class="row">
       <div class="col-md-6 col-md-offset-3 jumbotron">
