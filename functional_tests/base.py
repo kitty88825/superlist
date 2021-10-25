@@ -5,7 +5,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
-from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 
 
 MAX_WAIT = 10
@@ -14,7 +14,7 @@ MAX_WAIT = 10
 class FunctionalTest(StaticLiveServerTestCase):
 
     def setUp(self):
-        self.browser = webdriver.Chrome(ChromeDriverManager().install())
+        self.browser = webdriver.Firefox(executable_path=GeckoDriverManager().install())
         staging_server = os.environ.get('STAGING_SERVER')
         if staging_server:
             self.live_server_url = f'http://{staging_server}'

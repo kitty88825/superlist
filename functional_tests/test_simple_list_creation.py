@@ -1,6 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 
 from .base import FunctionalTest
 
@@ -61,7 +61,7 @@ class NewVisitorTest(FunctionalTest):
         # # We use a new browser session to make sure that no information
         # # of Edith's is coming through from cookies etc
         self.browser.quit()
-        self.browser = webdriver.Chrome(ChromeDriverManager().install())
+        self.browser = webdriver.Firefox(executable_path=GeckoDriverManager().install())
 
         # Francis visits the home page. There is no sign of Edith's list
         self.browser.get(self.live_server_url)
