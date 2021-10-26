@@ -37,13 +37,6 @@ class SendLoginEmailViewTest(TestCase):
             call(response.wsgi_request, expected),
         )
 
-
-class LoginViewTest(TestCase):
-
-    def test_redirects_to_home_page(self):
-        response = self.client.get('/accounts/login/?token=abcd123')
-        self.assertRedirects(response, '/')
-
     def test_creates_token_associated_with_email(self):
         self.client.post('/accounts/send_login_email/', data={
             'email': 'kitty@example.com',
@@ -61,6 +54,13 @@ class LoginViewTest(TestCase):
         expected_url = f'http://testserver/accounts/login/?token={token.uid}'
         (subject, body, from_email, to_list), kwargs = mock_send_mail.call_args
         self.assertIn(expected_url, body)
+
+
+class LoginViewTest(TestCase):
+
+    def test_redirects_to_home_page(self):
+        response = self.client.get('/accounts/login/?token=abcd123')
+        self.assertRedirects(response, '/')
 
     @patch('accounts.views.auth')
     def test_calls_authenticate_with_uid_from_get_request(self, mock_auth):
