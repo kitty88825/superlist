@@ -54,6 +54,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'lists',
     'accounts',
+    'functional_tests',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
