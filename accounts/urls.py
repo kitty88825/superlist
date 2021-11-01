@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.urls import path
 
-from lists import views
+from accounts import views
 
 urlpatterns = [
-    path('new/', views.NewListView.as_view(), name='new_list'),
-    path('<int:pk>/', views.ViewAndAddToList.as_view(), name='view_list'),
+    path('send_login_email/', views.send_login_email, name='send_login_email'),
+    path('login/', views.login, name='login'),
+    path('logout/', views.logout, name='logout'),
 ]

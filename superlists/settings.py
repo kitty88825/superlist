@@ -47,13 +47,24 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
-THIRD_PARTY_APPS = []
+THIRD_PARTY_APPS = [
+    'django_extensions',
+]
 
 LOCAL_APPS = [
     'lists',
+    'accounts',
+    'functional_tests',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+# https://docs.djangoproject.com/en/3.2/topics/auth/customizing/#substituting-a-custom-user-model
+AUTH_USER_MODEL = 'accounts.User'
+# https://docs.djangoproject.com/en/3.2/topics/auth/customizing/#authentication-backends
+AUTHENTICATION_BACKENDS = [
+    'accounts.authentication.PasswordlessAuthenticationBackend',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -137,3 +148,10 @@ STATIC_ROOT = PurePosixPath(BASE_DIR).joinpath('static')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

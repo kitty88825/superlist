@@ -1,25 +1,29 @@
-from django.shortcuts import redirect, render
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormView, CreateView
+from django.shortcuts import redirect
 
-from .models import Item, List
-
-
-def home_page(request):
-    return render(request, 'home.html')
-
-
-def new_list(request):
-    list_ = List.objects.create()
-    Item.objects.create(text=request.POST['item_text'], list=list_)
-    return redirect(f'/lists/{list_.id}/')
+from .forms import ItemForm, ExistingListItemForm
+from .models import List
 
 
-def view_list(request, list_id):
-    # items = Item.objects.filter(list_id=list_id)
-    list_ = List.objects.get(id=list_id)
-    return render(request, 'list.html', {'list': list_})
+class HomePageView(FormView):
+    template_name = 'home.html'
+    form_class = ItemForm
 
 
-def add_item(request, list_id):
-    list_ = List.objects.get(id=list_id)
-    Item.objects.create(text=request.POST['item_text'], list=list_)
-    return redirect(f'/lists/{list_.id}/')
+class NewListView(CreateView, HomePageView):
+
+    def form_valid(self, form):
+        list_ = List.objects.create()
+        form.save(for_list=list_)
+        return redirect(list_)
+
+
+class ViewAndAddToList(DetailView, CreateView):
+    model = List
+    template_name = 'list.html'
+    form_class = ExistingListItemForm
+
+    def get_form(self):
+        self.object = self.get_object()
+        return self.form_class(for_list=self.object, data=self.request.POST)
