@@ -9,6 +9,7 @@ django = "*"
 webdriver-manager = "*"
 gunicorn = "*"
 django-environ = "*"
+fabric3 = "*"
 
 [dev-packages]
 flake8 = "*"
